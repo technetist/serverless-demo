@@ -31,7 +31,7 @@ const getRestaurants = async () => {
 
 module.exports.handler = async (event, context) => {
   const restaurants = await getRestaurants()
-  console.log(`found ${restaurants.length} restaurants`)
+  console.log(`found ${restaurants.length} restaurants`)  
   const dayOfWeek = days[new Date().getDay()]
   const view = {
     awsRegion,

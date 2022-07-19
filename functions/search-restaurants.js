@@ -1,7 +1,7 @@
-const middy = require('@middy/core')
-const ssm = require('@middy/ssm')
 const DocumentClient = require('aws-sdk/clients/dynamodb').DocumentClient
 const dynamodb = new DocumentClient()
+const middy = require('@middy/core')
+const ssm = require('@middy/ssm')
 
 const { serviceName, stage } = process.env
 const tableName = process.env.restaurants_table
