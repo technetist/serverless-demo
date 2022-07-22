@@ -1,5 +1,6 @@
 const EventBridge = require('aws-sdk/clients/eventbridge')
 const eventBridge = new EventBridge()
+const Log = require('@dazn/lambda-powertools-logger')
 const SNS = require('aws-sdk/clients/sns')
 const sns = new SNS()
 
@@ -15,7 +16,7 @@ module.exports.handler = async (event) => {
     await sns.publish(snsReq).promise()
 
     const { restaurantName, orderId } = order
-    console.log(`notified restaurant [${restaurantName}] of order [${orderId}]`)
+    Log.debug('notified restaurant', { restaurantName, orderId })
 
     await eventBridge.putEvents({
         Entries: [{
@@ -26,5 +27,8 @@ module.exports.handler = async (event) => {
         }]
     }).promise()
 
-    console.log(`published 'restaurant_notified' event to EventBridge`)
+    Log.debug(`published event into EventBridge`, {
+        eventType: 'restaurant_notified',
+        busName
+    })
 }
