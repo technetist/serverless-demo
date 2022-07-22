@@ -16,8 +16,10 @@ custom:
     output:
       file: ./.env-outputs
   logLevel:
-    prod: INFO
-    default: DEBUG
+    prod: ERROR
+    default: INFO
+  serverless-iam-roles-per-function:
+    defaultInherit: true
 
 provider:
   name: aws
@@ -40,6 +42,19 @@ provider:
           - !Ref ApiGatewayRestApi
           - .execute-api.${aws:region}.amazonaws.com/${sls:stage}/orders
     LOG_LEVEL: ${self:custom.logLevel.${sls:stage}, self:custom.logLevel.default}
+    SAMPLE_DEBUG_LOG_RATE: 0.1
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+  tracing:
+    apiGateway: true
+    lambda: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - "xray:PutTraceSegments"
+            - "xray:PutTelemetryRecords"
+          Resource: "*"
 
 functions:
   get-index:
